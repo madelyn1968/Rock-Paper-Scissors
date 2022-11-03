@@ -1,17 +1,26 @@
 // Madelyn Hillier
 // SD230 Rock Paper Scissors
 
+
+// Runs a web-based game of rock, paper, scissors.
+
 // Global vars. Player's choice will hold the user's rock, paper, or scissors move.
 // Round over represents whether or not the game is active. When it is false, the player
 // will be able to select a new hand. Otherwise, they won't be able to click on the hands.
 // They will already have made a choice and the game will determine the winner of the round.
+
 let playersChoice;
 let roundOver = false;
+
+// Takes the id of the player's move and formats it for the game result display.
 
 function formatPlayersChoice() {
     return playersChoice.charAt(0).toUpperCase() + playersChoice.slice(1);
 }
 
+// Sets the display up for the start of the game.
+// Creates click listeners for the three game state buttons: let's go, play hand, and play again.
+// Sets click listeners for the hand icons.
 
 function initializeGame() {
     document.querySelector("#lets-go")
@@ -21,9 +30,14 @@ function initializeGame() {
             listenForChoice();
         });
 
+    // Creates the 'play-hand' button's actions. When the user clicks this,
+    // the hands won't have hover action anymore and won't be clickable.
+    // The button's text will change to 'play again'. The game will 
+    // determine a move for the computer and the outcome of the game 
+    // will be displayed on the screen.
+
     document.querySelector("#play-hand")
         .addEventListener("click", () => {
-            console.log('roundOVer: ' + roundOver);
             
             if(playersChoice != '') {
                 setHover();
@@ -34,29 +48,33 @@ function initializeGame() {
             }
     });
 
+    // Creates the 'play-again' button's actions. When the user clicks this, 
+    // the hands will be turned back to their original colors and their hover
+    // functions will be restored. The button's text will change to 'play hand'.
+
     document.querySelector("#play-again")
         .addEventListener("click", () => {
             setHover();
             unclickHands();
             roundOver = false;
             let compMove = document.querySelectorAll('.compMove');
-            console.log(compMove);
             // Might not be a compMove if there was a draw in the previous round.
             if(compMove.length > 0) {
                 compMove[0].classList.remove('compMove');
             }
-            
             document.querySelector("#play-again").style.display = "none";
             document.querySelector("#play-hand").style.display = "block";
             let preview = document.querySelector('h2');
             preview.textContent = 'Rock, Paper, Scissors';
-
             playersChoice = '';
-            console.log('Play again was clicked and game has been RESET!!!!!');
             
         });       
     
 }
+
+// Creates click listeners for the hand icons.
+// When the user clicks on a hand, the screen will show the name of the icon
+// that the user chose and the hand will turn pink.
 
 function listenForChoice() {
     
@@ -67,9 +85,7 @@ function listenForChoice() {
                 playersChoice = arr[i].id;
                 let preview = document.querySelector('h2');
                 preview.textContent = formatPlayersChoice() + '...';
-
                 unclickHands();
-                //console.log('e.target is: ' + e.target);
                 e.target.classList.add('clickedHand');
             
             }
@@ -83,14 +99,12 @@ function listenForChoice() {
 
 function unclickHands() {
     let testForPink = document.querySelectorAll('.clickedHand');
-    //console.log('clicked ones: ' + test);
 
     if(testForPink.length > 0) {
         testForPink[0].classList.remove('clickedHand');
     }
 
     let testForDraw = document.querySelectorAll('.drawHand');
-    //console.log('clicked ones: ' + test);
 
     if(testForDraw.length > 0) {
         testForDraw[0].classList.remove('drawHand');
@@ -98,13 +112,13 @@ function unclickHands() {
 
 }
 
+// Toggles the hover state of the hand icons.
 
 function setHover() {
     const choices = document.querySelectorAll('.choice');
     choices.forEach((choice, i, arr) => {
         let icon = choice.firstElementChild.classList;
         icon.toggle('disabled');
-        console.log(icon);
     });
 
 }
@@ -112,15 +126,13 @@ function setHover() {
 
 initializeGame();
 
-
+// Generates the computer's move. Determines the game's winner.
+// Creates and formats the results statement that will be displayed.
 
  function determineWinner() {
     const moves = ['Rock', 'Paper', 'Scissors'];
     const computerMove = moves[Math.floor(Math.random() * 3)];
     let compFontAwesome = document.getElementById(computerMove.toLowerCase()).firstElementChild;
-    console.log('players move: ' + playersChoice);
-    console.log('computer move: ' + computerMove);
-    console.log(compFontAwesome);
     
     let formattedPlayersChoice = formatPlayersChoice(); 
     let computerWon;
@@ -150,7 +162,6 @@ initializeGame();
 
     let resultBanner = document.querySelector('h2');
     resultBanner.textContent = resultPhrase;
-    console.log('resultSummary: ' + resultSummary);
     let summarySpan = document.createElement('span');
     if(computerWon !== undefined) {
         if(computerWon) {
@@ -167,7 +178,6 @@ initializeGame();
     }
     summarySpan.innerHTML = resultSummary;
     resultBanner.appendChild(summarySpan);
-    console.log('end of round');
     
 }
 
